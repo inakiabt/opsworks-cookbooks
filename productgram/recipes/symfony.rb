@@ -1,3 +1,5 @@
+include_attribute 'deploy'
+
   template "/etc/php.d/timezone.ini" do
       source "timezone.erb"
       owner "root"
@@ -7,6 +9,12 @@
 
 node[:deploy].each do |app_name, deploy|
 
+
+  script "test_toouch" do
+    interpreter "bash"
+    cwd "/tmp"
+    code "touch holamundo.txt"
+  end
 
   script "set_cache_log_permissions" do
     interpreter "bash"
