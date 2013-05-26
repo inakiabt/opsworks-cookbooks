@@ -1,1 +1,1 @@
-default[:phpapp][:dbtable] = 'urler'
+include_attribute 'deploy'
