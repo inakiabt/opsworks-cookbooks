@@ -1,2 +1,0 @@
-opsworks-cookbooks
-==================
