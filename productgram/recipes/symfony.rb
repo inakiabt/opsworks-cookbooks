@@ -1,5 +1,4 @@
-include_attribute 'deploy'
-
+Chef::Log.debug("Starting...")
   template "/etc/php.d/timezone.ini" do
       source "timezone.erb"
       owner "root"
@@ -9,11 +8,9 @@ include_attribute 'deploy'
 
 node[:deploy].each do |app_name, deploy|
 
-
-  script "test_toouch" do
-    interpreter "bash"
-    cwd "/tmp"
-    code "touch holamundo.txt"
+Chef::Log.debug("Entra viejo?")
+  execute "test_touch" do
+    command "touch /tmp/holamundo.txt"
   end
 
   script "set_cache_log_permissions" do
