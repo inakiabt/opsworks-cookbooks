@@ -11,8 +11,8 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}/current"
     code <<-EOH
-      sudo setfacl -R -m u:#{deploy[:user]}:rwX -m u:#{deploy[:group]}:rwX Symfony/app/cache Symfony/app/logs
-      sudo setfacl -dR -m u:#{deploy[:user]}:rwx -m u:#{deploy[:group]}:rwx Symfony/app/cache Symfony/app/logs
+      sudo setfacl -R -m u:#{deploy[:group]}:rwX -m u:#{deploy[:user]}:rwX Symfony/app/cache Symfony/app/logs
+      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx Symfony/app/cache Symfony/app/logs
     EOH
   end
 
