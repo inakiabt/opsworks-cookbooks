@@ -6,7 +6,7 @@ Chef::Log.debug("Starting...")
   end
 
 
-node[:deploy].each do |app_name, deploy|
+node[:deploy].each do |application, deploy|
 
 Chef::Log.debug("Entra viejo?")
   execute "test_touch" do
