@@ -57,6 +57,18 @@ service 'haproxy' do
   action [:enable, :start]
 end
 
+node[:haproxy][:pgbackends] = {}
+node[:haproxy][:pgbackends][:cyh] = []
+node[:haproxy][:pgbackends][:site] = []
+
+node[:haproxy][:php_backends].each do |backend|
+  if backend['name'].start_with?('cyh')
+    node[:haproxy][:pgbackends][:cyh].push(backend)
+  elsif backend['name'].start_with?('site')
+    node[:haproxy][:pgbackends][:site].push(backend)
+  end
+end
+
 template '/etc/haproxy/haproxy.cfg' do
   source 'haproxy.cfg.erb'
   owner 'root'

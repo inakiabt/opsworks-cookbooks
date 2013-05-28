@@ -3,6 +3,19 @@ service "haproxy" do
   action :nothing # only define so that it can be restarted if the config changed
 end
 
+node[:haproxy][:pgbackends] = {}
+node[:haproxy][:pgbackends][:cyh] = []
+node[:haproxy][:pgbackends][:site] = []
+
+node[:haproxy][:php_backends].each do |backend|
+  if backend['name'].start_with?('cyh')
+    node[:haproxy][:pgbackends][:cyh].push(backend)
+  elsif backend['name'].start_with?('site')
+    node[:haproxy][:pgbackends][:site].push(backend)
+  end
+end
+
+
 template "/etc/haproxy/haproxy.cfg" do
   cookbook "haproxy"
   source "haproxy.cfg.erb"
