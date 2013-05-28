@@ -37,7 +37,8 @@ default[:haproxy][:php_backends].each do |backend|
 	if backend['name'].start_with?('cyh')
 		default[:haproxy][:pgbackends][:cyh].push(backend)
 	elsif backend['name'].start_with?('site')
-		default[:haproxy][:pgbackends][:site].push(backend)		
+		default[:haproxy][:pgbackends][:site].push(backend)
+	end
 end
 
 def random_haproxy_pw
