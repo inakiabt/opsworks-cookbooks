@@ -30,14 +30,14 @@ default[:haproxy][:maxcon_factor_nodejs_app_ssl] = 10
 default[:haproxy][:maxcon_factor_static] = 15
 default[:haproxy][:maxcon_factor_static_ssl] = 15
 
-node[:haproxy][:pgbackends][:cyh] = []
-node[:haproxy][:pgbackends][:site] = []
+default[:haproxy][:pgbackends][:cyh] = []
+default[:haproxy][:pgbackends][:site] = []
 
-node[:haproxy][:php_backends].each do |backend|
+default[:haproxy][:php_backends].each do |backend|
 	if backend['name'].start_with?('cyh')
-		node[:haproxy][:pgbackends][:cyh].push(backend)
+		default[:haproxy][:pgbackends][:cyh].push(backend)
 	elsif backend['name'].start_with?('site')
-		node[:haproxy][:pgbackends][:site].push(backend)		
+		default[:haproxy][:pgbackends][:site].push(backend)		
 end
 
 def random_haproxy_pw
