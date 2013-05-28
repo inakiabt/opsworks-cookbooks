@@ -11,11 +11,11 @@ node[:deploy].each do |application, deploy|
     user "root"
     cwd "#{deploy[:deploy_to]}/current"
     code <<-EOH
-      sudo setfacl -R -m u:#{deploy[:group]}:rwX -m u:#{deploy[:user]}:rwX Symfony/app/cache Symfony/app/logs
-      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx Symfony/app/cache Symfony/app/logs
-
       php Symfony/app/console assets:install --env=prod
       php Symfony/app/console assetic:dump --env=prod
+
+      sudo setfacl -R -m u:#{deploy[:group]}:rwX -m u:#{deploy[:user]}:rwX Symfony/app/cache Symfony/app/logs
+      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx Symfony/app/cache Symfony/app/logs
     EOH
   end
 
