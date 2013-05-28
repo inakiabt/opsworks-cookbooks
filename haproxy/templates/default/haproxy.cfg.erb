@@ -263,6 +263,8 @@ frontend http-in
   #use_backend php_cyg_app_servers if php_cyg_app
   default_backend php_cyg_app_servers
   <% end -%>
+
+  #USING CUSTOM RECIPE
     
   <% if !node[:haproxy][:rails_backends].empty? -%>
   default_backend rails_app_servers
