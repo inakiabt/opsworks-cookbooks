@@ -72,7 +72,9 @@ backend php_cyh_app_servers
   <% node[:haproxy][:pgbackends][:cyh].each do |backend| -%>
   server <%= backend['name'] %> <%= backend['ip'] %>:80 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app] %> check inter <%= node[:haproxy][:check_interval] %>
   <% end -%>  
-<% elsif !node[:haproxy][:pgbackends][:site].empty? -%>  
+<% end -%>
+
+<% if !node[:haproxy][:pgbackends][:site].empty? -%>  
 backend php_site_app_servers
   balance roundrobin
   option redispatch
@@ -82,16 +84,7 @@ backend php_site_app_servers
   <% node[:haproxy][:pgbackends][:site].each do |backend| -%>
   server <%= backend['name'] %> <%= backend['ip'] %>:80 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app] %> check inter <%= node[:haproxy][:check_interval] %>
   <% end -%>  
-<% elsif !node[:haproxy][:php_backends].empty? -%>  
-backend php_app_servers_ssl
-  mode tcp
-  balance roundrobin
-  option redispatch
-  option ssl-hello-chk
-  <% node[:haproxy][:php_backends].each do |backend| -%>
-  server <%= backend['name'] %> <%= backend['ip'] %>:443 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app_ssl] %> check inter <%= node[:haproxy][:check_interval] %>
-  <% end -%>  
-<% end -%>
+<% else -%>
 
 <% if !node[:haproxy][:nodejs_backends].empty? -%>
 backend nodejs_app_servers
@@ -161,16 +154,6 @@ frontend http-in
     <% end -%>
   <% end -%>
 
-  # all domains of PHP applications
-  <% node[:haproxy][:php_applications].each do |app_name, app_config| -%>
-    <% app_config['domains'].each do |domain| -%>
-  acl php_application_<%= app_name %>_domain_<%= domain.gsub(/[^\w.:-]/, '_') %> hdr_end(host) -i <%= domain %>
-      <% if app_config['mounted_at'] -%>
-  acl php_application_<%= app_name %>_domain_<%= domain.gsub(/[^\w.:-]/, '_') %>_path path_beg <%= app_config['mounted_at'] %>
-      <% end -%>
-    <% end -%>
-  <% end -%>
-
   # all domains of node.js applications
   <% node[:haproxy][:nodejs_applications].each do |app_name, app_config| -%>
     <% app_config['domains'].each do |domain| -%>
@@ -216,18 +199,6 @@ frontend http-in
     <% end -%>
   <% end -%>
 
-  <% unless node[:haproxy][:php_applications].empty? || node[:haproxy][:php_backends].empty? -%>
-    <% node[:haproxy][:php_applications].each do |app_name, app_config| -%>
-      <% app_config['domains'].each do |domain| -%>
-        <% if app_config['mounted_at'] -%>
-  use_backend php_app_servers if php_application_<%= app_name %>_domain_<%= domain.gsub(/[^\w.:-]/, '_') %> php_application_<%= app_name %>_domain_<%= domain %>_path
-        <% else -%>
-  use_backend php_app_servers if php_application_<%= app_name %>_domain_<%= domain.gsub(/[^\w.:-]/, '_') %>
-        <% end -%>
-      <% end -%>
-    <% end -%>
-  <% end -%>
-  
   <% unless node[:haproxy][:rails_applications].empty? || node[:haproxy][:rails_backends].empty? -%>
     <% node[:haproxy][:rails_applications].each do |app_name, app_config| -%>
       <% app_config['domains'].each do |domain| -%>
@@ -252,8 +223,6 @@ frontend http-in
     
   <% if !node[:haproxy][:rails_backends].empty? -%>
   default_backend rails_app_servers
-  <% elsif !node[:haproxy][:php_backends].empty? -%>
-  default_backend php_app_servers
   <% elsif !node[:haproxy][:nodejs_backends].empty? -%>
   default_backend nodejs_app_servers
   <% elsif !node[:haproxy][:static_backends].empty? -%>
@@ -268,13 +237,6 @@ frontend https-in
   <% node[:haproxy][:rails_applications].each do |app_name, app_config| -%>
     <% app_config['domains'].each do |domain| -%>
   acl rails_applications_ssl hdr_end(host) -i <%= domain %>
-    <% end -%>
-  <% end -%>
-
-  # all domains of PHP applications
-  <% node[:haproxy][:php_applications].each do |app_name, app_config| -%>
-    <% app_config['domains'].each do |domain| -%>
-  acl php_applications_ssl hdr_end(host) -i <%= domain %>
     <% end -%>
   <% end -%>
 
@@ -295,9 +257,6 @@ frontend https-in
   <% unless node[:haproxy][:rails_applications].empty? || node[:haproxy][:rails_backends].empty? -%>
   use_backend rails_app_servers_ssl if rails_applications_ssl
   <% end -%>
-  <% unless node[:haproxy][:php_applications].empty? || node[:haproxy][:php_backends].empty? -%>
-  use_backend php_app_servers_ssl if php_applications_ssl
-  <% end -%>
   <% unless node[:haproxy][:nodejs_applications].empty? || node[:haproxy][:nodejs_backends].empty? -%>
   use_backend nodejs_app_servers_ssl if nodejs_applications_ssl
   <% end -%>
@@ -307,8 +266,6 @@ frontend https-in
   
   <% if !node[:haproxy][:rails_backends].empty? -%>
   default_backend rails_app_servers_ssl
-  <% elsif !node[:haproxy][:php_backends].empty? -%>
-  default_backend php_app_servers_ssl
   <% elsif !node[:haproxy][:nodejs_backends].empty? -%>
   default_backend nodejs_app_servers_ssl
   <% elsif !node[:haproxy][:static_backends].empty? -%>
