@@ -62,18 +62,6 @@ backend rails_app_servers_ssl
   <% end -%>
 <% end -%>
   
-<% if !node[:haproxy][:php_backends].empty? -%>  
-backend php_app_servers
-  balance roundrobin
-  option redispatch
-  option httpclose
-  option forwardfor
-  option httpchk <%= node[:haproxy][:health_check_method] %> <%= node[:haproxy][:health_check_url] %>
-  <% node[:haproxy][:php_backends].each do |backend| -%>
-  server <%= backend['name'] %> <%= backend['ip'] %>:80 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app] %> check inter <%= node[:haproxy][:check_interval] %>
-  <% end -%>  
-<% end -%>
-
 <% if !node[:haproxy][:pgbackends][:cyh].empty? -%>  
 backend php_cyh_app_servers
   balance roundrobin
@@ -84,9 +72,7 @@ backend php_cyh_app_servers
   <% node[:haproxy][:pgbackends][:cyh].each do |backend| -%>
   server <%= backend['name'] %> <%= backend['ip'] %>:80 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app] %> check inter <%= node[:haproxy][:check_interval] %>
   <% end -%>  
-<% end -%>
-
-<% if !node[:haproxy][:pgbackends][:site].empty? -%>  
+<% elsif !node[:haproxy][:pgbackends][:site].empty? -%>  
 backend php_site_app_servers
   balance roundrobin
   option redispatch
@@ -96,9 +82,7 @@ backend php_site_app_servers
   <% node[:haproxy][:pgbackends][:site].each do |backend| -%>
   server <%= backend['name'] %> <%= backend['ip'] %>:80 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app] %> check inter <%= node[:haproxy][:check_interval] %>
   <% end -%>  
-<% end -%>
-
-<% if !node[:haproxy][:php_backends].empty? -%>  
+<% elsif !node[:haproxy][:php_backends].empty? -%>  
 backend php_app_servers_ssl
   mode tcp
   balance roundrobin
