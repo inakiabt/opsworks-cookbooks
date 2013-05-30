@@ -10,7 +10,7 @@ node[:deploy].each do |application, deploy|
 		next
 	end
 
-	if !backend['name'].start_with?(application)
+	if !node[:opsworks][:instance][:hostname].start_with?(application)
 		must_restart_apache = true
 		undeploy do
 			deploy_data deploy
