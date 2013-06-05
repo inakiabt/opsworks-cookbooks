@@ -69,6 +69,7 @@ backend php_cyh_app_servers
   option httpclose
   option forwardfor
   option httpchk <%= node[:haproxy][:health_check_method] %> <%= node[:haproxy][:health_check_url] %>
+  appsession PHPSESSID len 64 timeout 3h request-learn prefix
   <% node[:haproxy][:pgbackends][:cyh].each do |backend| -%>
   server <%= backend['name'] %> <%= backend['ip'] %>:80 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app] %> check inter <%= node[:haproxy][:check_interval] %>
   <% end -%>  
@@ -81,6 +82,7 @@ backend php_site_app_servers
   option httpclose
   option forwardfor
   option httpchk <%= node[:haproxy][:health_check_method] %> <%= node[:haproxy][:health_check_url] %>
+  appsession PHPSESSID len 64 timeout 3h request-learn prefix
   <% node[:haproxy][:pgbackends][:site].each do |backend| -%>
   server <%= backend['name'] %> <%= backend['ip'] %>:80 weight <%= backend['backends'] || 10 %> maxconn <%= backend['backends'] * node[:haproxy][:maxcon_factor_php_app] %> check inter <%= node[:haproxy][:check_interval] %>
   <% end -%>  
