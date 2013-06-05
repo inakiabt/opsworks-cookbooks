@@ -20,7 +20,7 @@
 
 actions :install, :update, :dump_autoload
 
-default_action :update
+#default_action :update
 
 attribute :project_dir, :kind_of => String, :name_attribute => true
 attribute :install_path, :kind_of => [String, NilClass], :default => "/usr/local/bin"
