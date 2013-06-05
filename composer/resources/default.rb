@@ -19,7 +19,7 @@
 # limitations under the License.
 actions :install, :uninstall, :update
 
-default_action :install
+#default_action :install
 
 attribute :install_path, :kind_of => String, :name_attribute => true
 attribute :owner, :default => "root", :kind_of => [String, Integer]
