@@ -9,13 +9,13 @@ node[:deploy].each do |application, deploy|
   script "set_cache_log_permissions" do
     interpreter "bash"
     user "root"
-    cwd "#{deploy[:deploy_to]}/current"
+    cwd "#{deploy[:deploy_to]}/current/Symfony"
     code <<-EOH
-      php Symfony/app/console assets:install --env=prod
-      php Symfony/app/console assetic:dump --env=prod
+      php app/console assets:install --env=prod
+      php app/console assetic:dump --env=prod
 
-      sudo setfacl -R -m u:#{deploy[:group]}:rwX -m u:#{deploy[:user]}:rwX Symfony/app/cache Symfony/app/logs
-      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx Symfony/app/cache Symfony/app/logs
+      sudo setfacl -R -m u:#{deploy[:group]}:rwX -m u:#{deploy[:user]}:rwX app/cache app/logs
+      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx app/cache app/logs
     EOH
   end
 
