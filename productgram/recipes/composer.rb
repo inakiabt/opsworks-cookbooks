@@ -8,7 +8,7 @@ node[:deploy].each do |app_name, deploy|
 	end
 
 	composer_project "#{deploy[:deploy_to]}/current/Symfony" do
-		run_as "#{node[:apache][:user]}"
+		run_as "#{deploy[:user]}"
 		#group "#{deploy[:group]}"
 		quiet false
 	 	action [:install, :update]
