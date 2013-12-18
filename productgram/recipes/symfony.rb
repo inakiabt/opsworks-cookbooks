@@ -8,7 +8,8 @@ node[:deploy].each do |application, deploy|
 
   script "set_cache_log_permissions" do
     interpreter "bash"
-    user "root"
+    user "#{deploy[:user]}"
+    group "#{deploy[:group]}"
     cwd "#{deploy[:deploy_to]}/current/Symfony"
     code <<-EOH
       php app/console assets:install --env=prod
