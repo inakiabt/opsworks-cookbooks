@@ -17,24 +17,28 @@ node[:deploy].each do |application, deploy|
 
   symfony2_console "assets:install" do
     action :cmd
+    env "prod"
     command "assets:install --symlink"
     path path
   end
 
   symfony2_console "assetic:dump" do
     action :cmd
+    env "prod"
     command "assetic:dump"
     path path
   end
 
   symfony2_console "cache:clear" do
     action :cmd
+    env "prod"
     command "cache:clear"
     path path
   end
 
   symfony2_console "cache:warmup" do
     action :cmd
+    env "prod"
     command "cache:warmup"
     path path
   end
