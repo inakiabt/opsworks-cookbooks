@@ -2,6 +2,7 @@
 # Cookbook Name:: composer
 #
 # Copyright 2012, Robert Allen
+# Add On Geraud Puechaldou
 #
 # @license    http://www.apache.org/licenses/LICENSE-2.0
 #             Copyright [2012] [Robert Allen]
@@ -30,4 +31,5 @@ version          "0.1.0"
 end
 
 recipe "composer", "PHP Composer Installation and project interactions"
+recipe "composer::symfony", "Install symfony"
 

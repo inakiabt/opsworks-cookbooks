@@ -20,8 +20,10 @@
 
 actions :install, :update, :dump_autoload
 
-#default_action :update
+default_action :update
 
 attribute :project_dir, :kind_of => String, :name_attribute => true
 attribute :install_path, :kind_of => [String, NilClass], :default => "/usr/local/bin"
 attribute :dev, :equal_to => [true, false], :default => false
+attribute :quiet, :equal_to => [true, false], :default => true
+attribute :run_as, :kind_of => String, :default => "vagrant"

@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: composer
-# Recipe:: default
 #
 # Copyright 2012, Robert Allen
+# Add On Geraud Puechaldou
 #
 # @license    http://www.apache.org/licenses/LICENSE-2.0
 #             Copyright [2012] [Robert Allen]
@@ -18,9 +18,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#
 
-composer "/usr/local/bin" do
-  action [:install, :update]
-end
+actions :install, :update
+
+default_action :install
+attribute :project_packname, :kind_of => String, :name_attribute => true
+attribute :project_packpath, :kind_of => String
+attribute :project_packfolder, :kind_of => String
+attribute :project_packversion, :kind_of => String, :default => ''
+attribute :project_packuser, :kind_of => String
+attribute :project_packgroup, :kind_of => String
+
+attribute :dev, :equal_to => [true, false], :default => false
+attribute :install_path, :kind_of => String

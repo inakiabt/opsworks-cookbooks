@@ -17,15 +17,44 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+def whichfile(cmd)
+
+  Chef::Log.debug("Executing which #{cmd}")
+
+  shell = Mixlib::ShellOut.new("which " + cmd, :env => { 'PATH' => '/usr/bin:/usr/local/bin:/bin' })
+  shell.run_command
+
+  unless shell.exitstatus == 0
+    return false
+  else
+    return true
+  end
+end
+
+def find_php
+  # verify if PHP is installed if not raise an error and stop
+  @php_bin = whichfile("php")
+  if !@php_bin
+    raise "PHP was not found."
+  end
+end
+
+
 action :install do
-  remote_file "get-composer" do
+  find_php()
+
+  remote_file "get-whickomposer" do
     not_if "test -f #{new_resource.install_path}/composer.phar"
     path "#{new_resource.install_path}/composer.phar"
     source "https://getcomposer.org/composer.phar"
     owner new_resource.owner
     mode 0755
   end
-  execute "ln -nsf #{new_resource.install_path}/composer.phar #{new_resource.install_path}/composer"
+  execute "ln-composer" do
+    not_if "test -f #{new_resource.install_path}/composer"
+    command "ln -nsf #{new_resource.install_path}/composer.phar #{new_resource.install_path}/composer"
+  end
 end
 
 action :uninstall do
@@ -40,8 +69,10 @@ action :uninstall do
 end
 
 action :update do
+  find_php()
+
   execute "self-update-composer" do
     only_if "test -f #{new_resource.install_path}/composer.phar"
-    command "#{new_resource.install_path}/composer.phar -n --no-ansi self-update"
+    command "#{new_resource.install_path}/composer.phar -n --no-ansi -q self-update"
   end
 end
