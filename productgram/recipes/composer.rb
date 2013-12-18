@@ -3,7 +3,7 @@ include_recipe "composer"
 node[:deploy].each do |app_name, deploy|
 
 	composer "/usr/local/bin" do
-	  owner "root" # optional
+	  #owner "root" # optional
 	  action [:install]
 	end
 
