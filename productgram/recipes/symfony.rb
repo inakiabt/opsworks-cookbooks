@@ -13,10 +13,9 @@ node[:deploy].each do |application, deploy|
     code <<-EOH
       php app/console assets:install --env=prod
       php app/console assetic:dump --env=prod
-
-      sudo setfacl -R -m u:#{deploy[:group]}:rwX -m u:#{deploy[:user]}:rwX app/cache app/logs
-      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx app/cache app/logs
     EOH
+#      sudo setfacl -R -m u:#{deploy[:group]}:rwX -m u:#{deploy[:user]}:rwX app/cache app/logs
+#      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx app/cache app/logs
   end
 
 end
