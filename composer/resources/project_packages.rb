@@ -21,7 +21,7 @@
 
 actions :install, :update
 
-default_action :install
+#default_action :install
 attribute :project_packname, :kind_of => String, :name_attribute => true
 attribute :project_packpath, :kind_of => String
 attribute :project_packfolder, :kind_of => String
