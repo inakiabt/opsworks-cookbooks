@@ -20,14 +20,14 @@ node[:deploy].each do |application, deploy|
   end
 
   directory "#{deploy[:deploy_to]}/current/Symfony/app/cache" do
-    user "#{deploy[:user]}"
+    owner "#{deploy[:user]}"
     group "#{deploy[:group]}"
     recursive true
     mode "777"
   end
 
   directory "#{deploy[:deploy_to]}/current/Symfony/app/logs" do
-    user "#{deploy[:user]}"
+    owner "#{deploy[:user]}"
     group "#{deploy[:group]}"
     recursive true
     mode "777"
