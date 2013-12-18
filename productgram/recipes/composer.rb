@@ -3,12 +3,14 @@ include_recipe "composer"
 node[:deploy].each do |app_name, deploy|
 
 	composer "/usr/local/bin" do
-	  owner "root" # optional
+	  #owner "root" # optional
 	  action [:install]
 	end
 
 	composer_project "#{deploy[:deploy_to]}/current/Symfony" do
-	 action [:update]
+		run_as "#{deploy[:user]}"
+		#group "#{deploy[:group]}"
+	 	action [:update]
 	end
   # script "install_composer" do
   #   interpreter "bash"
