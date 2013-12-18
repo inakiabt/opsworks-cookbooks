@@ -19,4 +19,18 @@ node[:deploy].each do |application, deploy|
 #      sudo setfacl -dR -m u:#{deploy[:group]}:rwx -m u:#{deploy[:user]}:rwx app/cache app/logs
   end
 
+  directory "#{deploy[:deploy_to]}/current/Symfony/app/cache" do
+    user "#{deploy[:user]}"
+    group "#{deploy[:group]}"
+    recursive true
+    mode "777"
+  end
+
+  directory "#{deploy[:deploy_to]}/current/Symfony/app/logs" do
+    user "#{deploy[:user]}"
+    group "#{deploy[:group]}"
+    recursive true
+    mode "777"
+  end
+
 end
