@@ -10,7 +10,8 @@ node[:deploy].each do |app_name, deploy|
 	composer_project "#{deploy[:deploy_to]}/current/Symfony" do
 		run_as "#{deploy[:user]}"
 		#group "#{deploy[:group]}"
-	 	action [:update]
+		quiet false
+	 	action [:install, :update]
 	end
   # script "install_composer" do
   #   interpreter "bash"
